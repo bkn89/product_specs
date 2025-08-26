@@ -1,0 +1,532 @@
+Product Requirements Document: TikTok vs GPA Linear Regression Learning Tool
+Executive Summary
+An interactive web application that teaches linear regression fundamentals to undergraduate students using the culturally relevant example of TikTok usage vs academic performance. The tool guides users through a 7-phase learning journey from initial curiosity to deep understanding of statistical concepts and critical thinking about causation.
+Product Goals
+
+Make linear regression concepts accessible to students with only high school math backgrounds
+Create emotional investment through personally relevant subject matter
+Build statistical intuition before introducing formal terminology
+Develop critical thinking about correlation vs causation
+Provide foundation for understanding ML/AI concepts in their daily digital lives
+
+Target Audience
+Primary: Undergraduate students (ages 18-22) taking introductory statistics, data science, or research methods courses
+Secondary: High school AP statistics students, online learners interested in data science
+User Journey Overview
+Progressive disclosure through 7 phases, each unlocking after completion of the previous phase. Estimated total time: 25-35 minutes.
+
+Phase 1: The Hook (Motivation)
+Duration: 3-4 minutes
+Goal: Create emotional investment and curiosity
+Frontend Specifications
+Opening Animation Sequence
+
+Hero Image: Split-screen visual
+
+Left: Student scrolling TikTok in bed, clock showing 2:03 AM
+Right: Same student looking stressed at exam desk
+
+
+Typography: Large, bold question overlay: "Does TikTok time predict your GPA?"
+Animation: Smooth fade transition between the two scenes (2 seconds each)
+
+Interactive Question
+
+Component: Large button with provocative options
+
+"I'm here for the uncomfortable truth 📱"
+"Show me the data 📊"
+
+
+Click behavior: Button transforms into loading animation, then reveals first scatter plot
+
+Initial Data Reveal
+
+Chart Container:
+
+Clean, modern scatter plot (400px × 300px on desktop)
+X-axis: "Daily TikTok Minutes (0-300)"
+Y-axis: "GPA (2.0-4.0)"
+~50 synthetic data points showing negative correlation
+Points are student avatars (diverse, stylized icons)
+
+
+Color Scheme:
+
+Background: Soft gradient (light blue to white)
+Points: TikTok brand colors (#FF0050, #000000)
+Axes: Dark gray (#333)
+
+
+
+Pattern Recognition Prompt
+
+Text Block: Conversational tone
+
+"Look at this data from 200 students at universities across the US."
+"Before we draw any lines, what pattern do you see?"
+
+
+Interactive Element:
+
+Hover over points to see individual student stories
+"Marcus: 180 min/day TikTok, 2.9 GPA - 'I know I should stop but the algorithm knows me too well'"
+
+
+
+Manual Prediction Challenge
+
+UI Component: "Draw Your Prediction" tool
+
+Click anywhere on chart to start drawing line
+Drag to adjust slope and position
+Visual feedback with semi-transparent line preview
+
+
+Validation:
+
+No "wrong" answers at this stage
+Encouraging feedback: "Interesting prediction! Let's see what the math says..."
+
+
+
+Technical Requirements
+
+Responsive Design: Mobile-first, works on phones 375px+ width
+Accessibility: WCAG 2.1 AA compliance, screen reader compatible
+Performance: Page loads in <2 seconds, animations at 60fps
+Browser Support: Chrome, Firefox, Safari, Edge (last 2 versions)
+
+
+Phase 2: Pattern Recognition Game
+Duration: 4-5 minutes
+Goal: Build intuitive understanding before formal concepts
+Frontend Specifications
+Game Interface
+
+Layout: Card-based design with student profiles
+Student Cards: (150px × 200px each)
+
+Profile image (diverse representation)
+Name and major
+TikTok usage: Progress bar visualization
+GPA: Large, bold number
+Quote about their social media habits
+
+
+
+Interactive Sorting Game
+
+Mechanism: Drag and drop interface
+
+Students can drag cards to position them on a virtual line
+Snap-to-grid behavior for smooth UX
+
+
+Visual Feedback:
+
+Cards glow when dragged
+Drop zones highlight when card is over them
+Smooth animations for all interactions
+
+
+
+Progressive Revelation
+
+Round 1: 5 obvious cases (very high TikTok/low GPA vs very low TikTok/high GPA)
+Round 2: 8 moderate cases (builds pattern recognition)
+Round 3: 10 cases including outliers (introduces complexity)
+
+Feedback System
+
+Immediate Feedback:
+
+Green checkmarks for reasonable placements
+Gentle suggestions for reconsideration (not "wrong")
+"You're developing a good eye for data patterns!"
+
+
+Pattern Revelation:
+
+Animated line appears through correctly sorted cards
+"This is what data scientists call a 'negative correlation'"
+
+
+
+Game Mechanics
+
+Scoring: Encouragement-based, not punitive
+Hints: Available after 30 seconds of inactivity
+Skip Option: Available but discouraged ("Want to see the answer? You're learning by doing!")
+
+
+Phase 3: Concept Introduction
+Duration: 3-4 minutes
+Goal: Formal introduction of linear regression concept
+Frontend Specifications
+Definition Section
+
+Typography Hierarchy:
+
+H1: "What is Linear Regression?" (32px, bold)
+Body: Conversational explanation (16px, comfortable line height)
+
+
+Visual Metaphor:
+
+Split panel design
+Left: "What you just did" (their manual line)
+Right: "What linear regression does" (computed best fit line)
+
+
+
+Interactive Comparison Tool
+
+Slider Control:
+
+"Your line" to "Best fit line" transition slider
+Shows difference in real-time
+Numeric feedback: "Your prediction vs. mathematical best fit"
+
+
+Error Visualization:
+
+Show distance from points to both lines
+Color coding: shorter distances = better fit
+Animation showing how regression minimizes total error
+
+
+
+Key Concepts Introduction
+
+Infographic Style Explanations:
+
+"Best fit" concept with visual analogies
+"Prediction power" with example scenarios
+"Mathematical precision" vs "human intuition"
+
+
+
+Personal Connection
+
+Calculator Widget:
+
+"Based on the regression line, enter your TikTok usage:"
+Input field with real-time prediction update
+"Your predicted GPA: X.X" with confidence interval visualization
+
+
+
+
+Phase 4: Understanding Components
+Duration: 5-6 minutes
+Goal: Break down slope and intercept intuitively
+Frontend Specifications
+Slope Explorer
+
+Interactive Slider:
+
+Range: -2.0 to 2.0 (representing GPA change per hour)
+Real-time line updates as user drags
+Value display: "For every extra hour on TikTok, GPA changes by X.X points"
+
+
+Slope Scenarios:
+
+Gentle slope: "Weak relationship"
+Steep slope: "Strong relationship"
+Positive slope: "Wait... what if TikTok actually helped?"
+
+
+
+Intercept Explorer
+
+Y-Axis Focus View:
+
+Zoom into y-intercept region
+Slider to adjust intercept value
+Explanation: "If someone spent 0 minutes on TikTok, their GPA would be..."
+
+
+Reality Check:
+
+"Does a 4.2 GPA make sense as a starting point?"
+Critical thinking prompts about model assumptions
+
+
+
+Combined Effects Demo
+
+Two-slider Interface:
+
+Slope and intercept controls side-by-side
+Challenge: "Can you recreate the original best-fit line?"
+Visual feedback showing distance from true line
+
+
+
+Real-World Translation
+
+Scenario Generator:
+
+"What does this slope mean for different students?"
+Examples with different starting usage levels
+"If Marcus cut his TikTok time in half..."
+
+
+
+Animation Specifications
+
+Smooth Transitions: All line movements use easing functions
+Highlight Effects: Parameter changes highlight affected line segments
+Progressive Disclosure: Advanced concepts appear only after basic understanding
+
+
+Phase 5: Adding Complexity
+Duration: 6-8 minutes
+Goal: Understand real-world messiness and model limitations
+Frontend Specifications
+Noise Level Control
+
+Slider Interface: "How much do students vary from the pattern?"
+
+Range: 0.0 (perfect line) to 2.0 (very scattered)
+Real-time point redistribution with animation
+Confidence interval visualization appears with higher noise
+
+
+
+Outlier Management
+
+Interactive Outlier Stories:
+
+Clickable points that are far from the line
+Modal popups with student explanations:
+
+"I use TikTok for study breaks - it actually helps me focus"
+"I'm naturally gifted but procrastinate with social media"
+"My major is really easy, so TikTok doesn't matter much"
+
+
+
+
+
+Data Subset Explorer
+
+Filter Controls:
+
+Academic year: Freshman, Sophomore, Junior, Senior
+Major category: STEM, Liberal Arts, Business, etc.
+Study habits: High structure vs Low structure
+
+
+Comparative View:
+
+Side-by-side regression lines for different groups
+"The relationship isn't the same for everyone!"
+
+
+
+Model Confidence Visualization
+
+Uncertainty Bands:
+
+Show prediction confidence intervals
+Wider bands = more uncertainty
+Interactive: "What happens to confidence with more data?"
+
+
+
+Advanced Interactions
+
+Parameter Experimentation:
+
+"What if we removed outliers?"
+"What if we focused only on STEM majors?"
+A/B comparison tools for different model assumptions
+
+
+
+
+Phase 6: Critical Thinking (The Plot Twist)
+Duration: 4-5 minutes
+Goal: Challenge assumptions about causation
+Frontend Specifications
+Causation Challenge Interface
+
+Dramatic Pause Animation:
+
+Screen dims slightly
+Large text appears: "But wait... does TikTok CAUSE lower grades?"
+Thinking emoji animation
+
+
+
+Alternative Explanations Explorer
+
+Hypothesis Cards:
+
+Drag-and-drop interface with different causal explanations:
+
+"Stressed students cope with TikTok"
+"Night owls stay up scrolling AND miss morning classes"
+"Procrastinators use social media to avoid studying"
+"Lower achievers seek social validation online"
+
+
+
+
+
+Confounding Variables Demo
+
+Third Variable Visualization:
+
+3D scatter plot option (or multiple 2D views)
+Add sleep hours, stress levels, course difficulty
+Show how relationships change with additional context
+
+
+Simpson's Paradox Example:
+
+Overall negative correlation
+But positive correlation within some subgroups
+"The data tells different stories at different levels!"
+
+
+
+Experimental Design Challenge
+
+Mini-Game: "How would you prove causation?"
+
+Multiple choice scenarios
+Feedback on research design quality
+Introduction to randomized controlled trials
+
+
+
+Critical Thinking Prompts
+
+Socratic Questions:
+
+"What other factors might influence both TikTok use AND grades?"
+"How could we test if reducing TikTok actually improves GPA?"
+"What would convince YOU that there's a causal relationship?"
+
+
+
+
+Phase 7: Real-World Applications
+Duration: 3-4 minutes
+Goal: Connect to broader applications and career relevance
+Frontend Specifications
+Applications Gallery
+
+Card-Based Layout:
+
+Each application gets an illustrated card
+Hover effects reveal more details
+Click to expand with examples
+
+
+
+Application Categories
+
+Academic Predictions:
+
+University admissions algorithms
+Personalized learning platforms
+Early warning systems for at-risk students
+
+
+Technology Applications:
+
+Recommendation algorithms (Netflix, Spotify)
+Social media engagement optimization
+Digital wellness tracking
+
+
+Business Intelligence:
+
+Sales forecasting
+Customer behavior prediction
+Market trend analysis
+
+
+
+"You're Already Using This" Reveals
+
+Progressive Disclosure:
+
+Start with obvious examples
+Reveal increasingly sophisticated applications
+End with: "Linear regression is everywhere in your digital life"
+
+
+
+Career Connection
+
+Interactive Career Paths:
+
+Data Scientist
+Product Manager
+Marketing Analyst
+Academic Researcher
+
+
+Skills Progression:
+
+"You just learned the foundation of machine learning"
+"Next steps: multiple regression, logistic regression, neural networks"
+
+Completion Experience
+
+Achievement Unlock:
+
+Badge/certificate generation
+Social sharing options
+"You're now statistically literate" message
+
+
+Global UI/UX Specifications
+Design System
+
+Color Palette:
+
+Primary: TikTok-inspired pink (#FF0050)
+Secondary: Academic blue (#2E86AB)
+Success: Forest green (#28A745)
+Warning: Amber (#FFC107)
+Background: Off-white (#FAFAFA)
+
+
+Typography
+
+Headings: Poppins font family
+Body Text: Inter font family
+Code/Data: JetBrains Mono
+
+Responsive Breakpoints
+
+Mobile: 375px - 768px
+Tablet: 768px - 1024px
+Desktop: 1024px+
+
+Accessibility Requirements
+
+Keyboard Navigation: Full functionality without mouse
+Screen Readers: ARIA labels, semantic HTML
+Color Contrast: WCAG 2.1 AA minimum
+Alternative Text: All charts have data table alternatives
+
+Performance Requirements
+
+Load Time: <3 seconds initial load
+Interaction Response: <100ms for all interactions
+Animation Performance: 60fps minimum
+Bundle Size: <500KB initial JavaScript
+
+Progress Tracking
+
+Navigation Bar: Shows current phase and completion status
+Save State: Local storage persistence
+Resume Capability: Can continue from any phase
