@@ -15,11 +15,9 @@ Secondary: High school AP statistics students, online learners interested in dat
 User Journey Overview
 Progressive disclosure through 7 phases, each unlocking after completion of the previous phase. Estimated total time: 25-35 minutes.
 
-Phase 1: The Hook (Motivation)
-Duration: 3-4 minutes
-Goal: Create emotional investment and curiosity
-Frontend Specifications
-Opening Animation Sequence
+Phase 1: Hypothesis Formation
+Duration: 4-5 minutes
+Goal: Create personal investment through hypothesis formation and establish scientific thinking approachFrontend SpecificationsOpening Hook Sequence
 
 Hero Image: Split-screen visual
 
@@ -28,19 +26,76 @@ Right: Same student looking stressed at exam desk
 
 
 Typography: Large, bold question overlay: "Does TikTok time predict your GPA?"
+Subtext: "Before we look at any data, let's see how good your intuition is about human behavior."
 Animation: Smooth fade transition between the two scenes (2 seconds each)
+Hypothesis Formation InterfacePrediction Challenge 1: Relationship Direction
 
-Interactive Question
+Section Header: "If we surveyed 1,000 college students about their daily TikTok usage and GPA, what relationship would we find?"
+Interactive Slider:
 
-Component: Large button with provocative options
+Range: -100 to +100 (maps to correlation strength)
+Labels at key positions:
 
-"I'm here for the uncomfortable truth 📱"
-"Show me the data 📊"
+Left (-100): "Strong Negative - More TikTok = Much Lower GPA"
+Center (0): "No Relationship - TikTok usage doesn't affect GPA"
+Right (+100): "Strong Positive - More TikTok = Higher GPA"
 
 
-Click behavior: Button transforms into loading animation, then reveals first scatter plot
+Visual feedback: Color changes from red (negative) to gray (neutral) to green (positive)
+Real-time text update: "You think the relationship is [Strong Negative/Weak Positive/etc.]"
 
-Initial Data Reveal
+
+Prediction Challenge 2: Confidence Level
+
+Section Header: "How confident are you in your prediction?"
+Interactive Confidence Slider:
+
+Range: "Just guessing" to "Very confident"
+Visual: Certainty meter with confidence percentage
+Labels: "Wild guess" → "Somewhat sure" → "Pretty confident" → "Very confident"
+
+
+Personal Investment Component
+
+Section Header: "Quick personal check - about how many minutes do you spend on TikTok daily?"
+Time Input Slider:
+
+Range: 0 to 300+ minutes
+Real-time conversion display: "That's about X.X hours per day"
+Visual feedback: Progress bar showing relative usage
+Contextual messages:
+
+0-30 mins: "Light user"
+30-90 mins: "Moderate user"
+90-180 mins: "Heavy user"
+180+ mins: "Very heavy user"
+
+
+
+
+Hypothesis Lock-In
+
+Summary Box:
+
+"Your Predictions:"
+"Relationship: [their direction and strength prediction]"
+"Your daily usage: X minutes"
+"Confidence level: [their confidence]"
+
+
+Commit Button:
+
+Large, prominent button: "Lock in my predictions - show me the data!"
+Button transforms with loading animation on click
+Transition text: "Preparing your personalized data revelation..."
+
+
+Data Revelation SequenceTransition Animation
+
+Loading State: "Analyzing survey data from students across different universities..."
+Build Suspense: 2-3 second loading with progress indicator
+Reveal Setup: "Based on responses from over 1,000 college students, here's what we found..."
+Personalized Data Reveal
 
 Chart Container:
 
@@ -48,55 +103,76 @@ Clean, modern scatter plot (400px × 300px on desktop)
 X-axis: "Daily TikTok Minutes (0-300)"
 Y-axis: "GPA (2.0-4.0)"
 ~50 synthetic data points showing negative correlation
-Points are student avatars (diverse, stylized icons)
+Points are diverse, stylized student avatars
 
 
-Color Scheme:
+Personal Highlight:
 
-Background: Soft gradient (light blue to white)
-Points: TikTok brand colors (#FF0050, #000000)
-Axes: Dark gray (#333)
-
-
-
-Pattern Recognition Prompt
-
-Text Block: Conversational tone
-
-"Look at this data from 200 students at universities across the US."
-"Before we draw any lines, what pattern do you see?"
+User's reported usage marked with distinct color/shape
+Pulsing animation to draw attention
+Label: "This is where YOU fall on the distribution"
 
 
-Interactive Element:
+Prediction vs Reality Comparison
 
-Hover over points to see individual student stories
-"Marcus: 180 min/day TikTok, 2.9 GPA - 'I know I should stop but the algorithm knows me too well'"
+Split View Interface:
 
-
-
-Manual Prediction Challenge
-
-UI Component: "Draw Your Prediction" tool
-
-Click anywhere on chart to start drawing line
-Drag to adjust slope and position
-Visual feedback with semi-transparent line preview
+Left panel: "What You Predicted" (shows their hypothesis line)
+Right panel: "What We Found" (shows actual trend line)
+Animated transition between the two views
 
 
-Validation:
+Accuracy Feedback:
 
-No "wrong" answers at this stage
-Encouraging feedback: "Interesting prediction! Let's see what the math says..."
+"Your intuition was [very close/somewhat close/quite different]!"
+Specific feedback based on their predictions:
 
+Direction accuracy: "You correctly predicted the negative relationship"
+Strength accuracy: "You predicted [stronger/weaker] than what we found"
+
+
+Personal Position Analysis
+
+Your Data Point:
+
+Highlight user's position relative to the trend line
+"Based on your TikTok usage, the pattern suggests your GPA might be around X.X"
+"How does that compare to your actual GPA?"
+
+
+Individual Story Context:
+
+Hover over nearby points to see brief student profiles:
+"Marcus: 180 min/day, 2.9 GPA - 'I know I should cut back but TikTok helps me unwind'"
+"Elena: 45 min/day, 3.7 GPA - 'I only check TikTok during study breaks'"
 
 
 Technical Requirements
 
 Responsive Design: Mobile-first, works on phones 375px+ width
 Accessibility: WCAG 2.1 AA compliance, screen reader compatible
-Performance: Page loads in <2 seconds, animations at 60fps
+Performance: Page loads in <2 seconds, smooth 60fps animations
 Browser Support: Chrome, Firefox, Safari, Edge (last 2 versions)
+Data Persistence: Save user predictions to compare later in journey
+Color Scheme & Visual Design
 
+Background: Soft gradient (dark charcoal to lighter gray) for dramatic effect
+Primary Text: White for contrast
+Accent Color: TikTok pink (#FF0050) for key elements
+Slider Controls: Modern, touch-friendly with clear visual feedback
+Chart Colors:
+
+User point: Bright yellow/gold for visibility
+Other points: Varied but subdued colors
+Trend line: TikTok pink with subtle glow effect
+
+
+Success Metrics for Phase 1
+
+Engagement: User completes all three prediction inputs
+Investment: User reports feeling curious about results
+Learning Setup: Clear understanding that they're about to test their intuition against data
+This revised Phase 1 eliminates meaningless choice and creates genuine value by having users form testable hypotheses before data exposure, setting up multiple moments of educational payoff when their predictions are compared to the actual patterns.
 
 Phase 2: Pattern Recognition Game
 Duration: 4-5 minutes
