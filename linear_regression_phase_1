@@ -1,0 +1,292 @@
+Project Context & Educational GoalsOverall Project Vision
+This is Phase 1 of a 7-phase interactive web application designed to teach linear regression fundamentals to undergraduate students (ages 18-22) with only high school math backgrounds. The complete learning journey transforms abstract statistical concepts into intuitive understanding through culturally relevant examples and hands-on discovery.Why This Project Matters
+
+Accessibility Gap: Traditional statistics education often alienates students with abstract examples (car prices, housing data) that feel disconnected from their daily experience
+Engagement Problem: Most educational tools present concepts as lectures rather than interactive discovery experiences
+Practical Relevance: Students live in a data-driven world but don't understand the algorithms shaping their digital lives (social media feeds, recommendations, academic predictions)
+Foundation Building: Linear regression is the gateway to understanding machine learning, but it's often taught as pure math rather than a practical tool for understanding patterns
+Target Learning Outcomes (Full Project)
+By completion, students should be able to:
+
+Recognize patterns in data intuitively before applying mathematical tools
+Understand linear regression as a prediction tool, not just an abstract mathematical concept
+Distinguish correlation from causation and think critically about data interpretation
+Connect statistical concepts to real-world applications they encounter daily
+Approach data analysis with both human intuition and mathematical rigor
+7-Phase Journey Overview
+
+Phase 1 (This Implementation): Hypothesis Formation & Discovery - Build intuition and understand why mathematical optimization matters
+Phase 2-7 to be determined
+
+Phase 1 Technical Specification: TikTok vs GPA Linear Regression Discovery
+Overview
+Single-page scroll implementation with 4 main sections and smooth anchor navigation. User progresses through hypothesis formation, data discovery, mathematical setup, and results comparison.
+Page Structure & Layout
+Global Container
+
+Full-width responsive container
+Smooth scroll behavior enabled
+Fixed progress indicator at top
+Mobile-first design (min-width: 375px)
+
+Progress Indicator
+Fixed header bar showing:
+- Phase 1 of 7
+- Completion percentage within Phase 1 (0-100%)
+- Visual progress bar
+- "Linear Regression Discovery" title
+Section A: Hypothesis Formation
+Anchor ID: #hypothesis-formation
+Header Section
+<h1>Does TikTok time predict your GPA?</h1>
+<p>Before we look at any data, let's see how good your intuition is about human behavior.</p>
+Prediction Challenge 1: Relationship Direction
+
+Label: "If we surveyed 1,000 college students about their daily TikTok usage and GPA, what relationship would we find?"
+Input: Range slider (-100 to +100)
+Labels:
+
+Left (-100): "Strong Negative - More TikTok = Much Lower GPA"
+Center (0): "No Relationship - TikTok usage doesn't affect GPA"
+Right (+100): "Strong Positive - More TikTok = Higher GPA"
+
+
+Visual Feedback: Color changes (red → gray → green)
+Live Update: "You think the relationship is [Strong Negative/Weak/etc.]"
+
+Prediction Challenge 2: Confidence Level
+
+Label: "How confident are you in your prediction?"
+Input: Range slider (0-100)
+Labels: "Just guessing" → "Somewhat sure" → "Pretty confident" → "Very confident"
+Visual: Confidence meter with percentage display
+
+Personal Investment
+
+Label: "Quick personal check - about how many minutes do you spend on TikTok daily?"
+Input: Range slider (0-300 minutes)
+Live Display: "That's about X.X hours per day"
+Usage Categories:
+
+0-30: "Light user"
+30-90: "Moderate user"
+90-180: "Heavy user"
+180+: "Very heavy user"
+
+
+
+Summary & Transition
+
+Summary Box: Display all predictions in card format
+Button: "Lock in my predictions - show me the data!"
+Action: Smooth scroll to Section B
+Data Storage: Save all inputs to localStorage for later phases
+
+Section B: Discovery Sequence
+Anchor ID: #data-discovery
+Step 1: Data Introduction
+
+Header: "Here are 10 students from our survey. Each dot represents one person."
+Chart Container: 600px × 400px (responsive)
+Data Points: 10 carefully selected points
+
+User's point: Bright blue (#0066FF), 10px radius, subtle pulse animation
+Other points: Neutral gray (#888888), 6px radius
+
+
+Axes:
+
+X: "Daily TikTok Minutes (0-300)"
+Y: "GPA (2.0-4.0)"
+
+
+Callout: "The blue dot is you - [X] minutes of TikTok daily. Take a moment to look at the pattern. What do you notice?"
+
+Step 2: Interactive Stories
+
+Prompt: "Hover over each student to learn their story..."
+Hover States: Tooltip with student profiles:
+Light users: "Sarah: 15 min/day, 3.8 GPA - 'I only check TikTok between classes'"
+Moderate users: "Alex: 90 min/day, 3.2 GPA - 'TikTok is my study break reward'"
+Heavy users: "Marcus: 240 min/day, 2.4 GPA - 'I can't stop scrolling at night'"
+
+Follow-up: "Now that you know their stories, do you see a relationship forming?"
+
+Step 3: Line Drawing Challenge
+
+Header: "Your turn! Draw a line that best represents the relationship you see."
+Drawing Tool:
+
+Click and drag to draw line
+Real-time preview
+Touch-friendly (mobile)
+Semi-transparent preview line
+"Try Again" button
+
+
+Encouragement: "Don't worry about being perfect - trust your instincts!"
+
+Step 4: Transition
+
+Confirmation: "Here's the line you drew:" (highlight user's line)
+Button: "Ready to see what mathematics would draw?"
+Action: Smooth scroll to Section C
+
+Section C: Mathematical Setup
+Anchor ID: #mathematical-setup
+Motivation Setup
+
+Header: "Here's why making accurate predictions matters:"
+Context:
+"You're a peer counselor helping students balance social media and academics.
+
+You know that telling people to 'just stop using TikTok' doesn't work - it's popular for a reason, and people won't quit cold turkey.
+
+But students ARE worried about their grades. They want to know: 'How much is too much?'"
+
+
+Prediction Scenarios
+
+Scenario 1:
+
+"Emma asks you: 'I spend 2 hours on TikTok daily. Should I be concerned about my GPA?'"
+Show prediction point at 120 minutes on user's line
+"Based on your line, what would you tell her?"
+
+
+Scenario 2:
+
+"Jason uses TikTok 20 minutes per day and wonders: 'Am I being too restrictive? Could I use it more without hurting my grades?'"
+Show prediction point at 20 minutes on user's line
+
+
+
+Why Accuracy Matters
+"Your advice could really impact their academic success.
+
+If you tell Emma she's fine at 2 hours but she actually should cut back, her grades might suffer.
+
+If you tell Jason he needs to cut back even more when he's already being cautious, you might cause unnecessary stress.
+
+The more accurate your predictions, the better guidance you can give students who want to find the right balance."
+Distance Visualization
+
+Visual: Show distance lines from each data point to user's line
+Explanation: "Your line is THIS far from each student we surveyed"
+Key Insight: "The closer our line is to the students we already know about, the better our predictions will be for NEW students asking for advice."
+
+Transition
+
+Setup: "Math has a systematic way to find the line that makes the most accurate predictions."
+Button: "Show me the mathematical approach!"
+Action: Smooth scroll to Section D
+
+Section D: Results & Comparison
+Anchor ID: #results-comparison
+Mathematical Reveal
+
+Animation: Best-fit line draws from left to right (1.5s)
+Visual Specs:
+
+User's line: Forest green (#228B22)
+Mathematical line: TikTok pink (#FF0050)
+Legend: "👤 Your line" "📊 Mathematical best-fit"
+
+
+Distance Update: Show improved distances with animation
+
+Comparison Cards
+
+Card Layout: Three side-by-side cards (responsive to stack on mobile)
+
+Card 1: "Your Intuition"
+✅ You captured the [direction/trend] really well!
+Your line shows you're already thinking like a data scientist!
+[Visual: User's line highlighted]
+Card 2: "Mathematical Precision"
+🎯 Math fine-tuned the angle and position to minimize prediction errors
+Both lines tell the same story - you spotted the pattern!
+[Visual: Regression line with distance markers]
+Card 3: "Personal Position Check"
+📍 With [X] minutes/day, you're a [usage category] user
+Both your line and math's line suggest students with your usage typically have around [Y] GPA
+[Visual: User's point highlighted on both lines]
+Phase Transition
+
+Achievement Message: "Great work! You've learned the foundation of pattern recognition and mathematical optimization."
+Button: "Continue to Phase 2: Pattern Recognition Game"
+Action: Navigate to Phase 2
+
+Technical Implementation Details
+Color Palette
+css:root {
+  --user-color: #0066FF;        /* Bright blue for user elements */
+  --user-line: #228B22;         /* Forest green for user's drawn line */
+  --math-line: #FF0050;         /* TikTok pink for mathematical line */
+  --data-points: #888888;       /* Neutral gray for other data points */
+  --success: #28A745;           /* Green for positive feedback */
+  --background: #FAFAFA;        /* Off-white background */
+  --text: #333333;              /* Dark gray for text */
+}
+Responsive Breakpoints
+css/* Mobile First */
+.container { max-width: 100%; padding: 1rem; }
+
+/* Tablet */
+@media (min-width: 768px) {
+  .container { max-width: 768px; margin: 0 auto; }
+  .chart { width: 600px; height: 400px; }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .container { max-width: 1024px; }
+  .comparison-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+}
+Smooth Scrolling
+javascriptfunction scrollToSection(sectionId) {
+  document.getElementById(sectionId).scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
+  updateProgress();
+}
+Progress Tracking
+javascriptfunction updateProgress() {
+  const sections = ['hypothesis-formation', 'data-discovery', 'mathematical-setup', 'results-comparison'];
+  const currentSection = getCurrentVisibleSection();
+  const progressPercent = (sections.indexOf(currentSection) + 1) / sections.length * 100;
+  document.querySelector('.progress-bar').style.width = `${progressPercent}%`;
+}
+Data Persistence
+javascript// Save user inputs
+localStorage.setItem('phase1_predictions', JSON.stringify({
+  relationship: relationshipSlider.value,
+  confidence: confidenceSlider.value,
+  tiktokUsage: usageSlider.value,
+  drawnLine: userLineCoordinates,
+  timestamp: Date.now()
+}));
+Chart Implementation
+
+Use HTML5 Canvas or SVG for interactive chart
+Libraries: D3.js or Chart.js for data visualization
+Touch events for mobile line drawing
+Responsive canvas sizing
+
+Accessibility
+
+WCAG 2.1 AA compliance
+Keyboard navigation for all interactive elements
+Screen reader compatible
+Alt text for all visual elements
+High contrast mode support
+
+Performance Requirements
+
+Page load: < 3 seconds
+Smooth scrolling: 60fps
+Interactive responses: < 100ms
+Bundle size: < 500KB initial load
+
+This specification provides everything needed for Claude Code to implement Phase 1 as a single-page scroll experience with smooth transitions and engaging user interactions.
