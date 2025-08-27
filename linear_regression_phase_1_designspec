@@ -1,0 +1,1281 @@
+# TikTok vs GPA Linear Regression Discovery
+## Phase 1 Design Specification v2.0
+
+### Project Overview
+Single-page scroll implementation teaching linear regression fundamentals through TikTok usage vs GPA prediction. This updated specification incorporates UX improvements for better mobile experience, reduced cognitive load, and enhanced student engagement.
+
+## Design System
+
+### Color Palette
+```css
+:root {
+  /* Student Emotional States */
+  --student-curious: #4ECDC4;      /* Teal for exploration */
+  --student-worried: #FFE66D;      /* Yellow for concern */
+  --student-confident: #95E1D3;    /* Light teal for success */
+  
+  /* Prediction System */
+  --prediction-user: #3D5A80;      /* Navy for user predictions */
+  --prediction-math: #EE6C4D;      /* Coral for mathematical results */
+  
+  /* Feedback States */
+  --success-green: #98D8C8;        /* Success validation */
+  --warning-amber: #FFEAA7;        /* Caution/advice needed */
+  --neutral-gray: #B8B8B8;         /* Neutral data points */
+  
+  /* Interface */
+  --background: #FAFBFC;           /* Off-white background */
+  --text-primary: #2D3748;         /* Dark gray for primary text */
+  --text-secondary: #718096;       /* Medium gray for secondary text */
+  --card-background: #FFFFFF;      /* White for cards/containers */
+}
+```
+
+### Typography Scale
+```css
+:root {
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Headers */
+  --h1: 2.5rem;    /* 40px - Section headers */
+  --h2: 2rem;      /* 32px - Subsection headers */
+  --h3: 1.5rem;    /* 24px - Component headers */
+  --h4: 1.25rem;   /* 20px - Card headers */
+  
+  /* Body */
+  --body-large: 1.125rem;   /* 18px - Important descriptions */
+  --body-normal: 1rem;      /* 16px - Standard text */
+  --body-small: 0.875rem;   /* 14px - Captions, metadata */
+}
+```
+
+## Page Structure
+
+### Fixed Progress Header
+```html
+<header class="progress-header">
+  <div class="container">
+    <div class="phase-context">
+      <span class="phase-indicator">Phase 1 of 7</span>
+      <h1 class="phase-title">Pattern Detective</h1>
+    </div>
+    
+    <div class="step-navigation">
+      <div class="step active" data-target="#prediction">Predict</div>
+      <div class="step" data-target="#discovery">Explore</div>
+      <div class="step" data-target="#scenarios">Test</div>
+      <div class="step" data-target="#results">Compare</div>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: 25%"></div>
+    </div>
+  </div>
+</header>
+```
+
+**Specifications:**
+- Fixed position, 80px height
+- Glass morphism background (backdrop-filter: blur(10px))
+- Step indicators clickable for navigation
+- Progress bar animates on scroll
+- Mobile: Stack phase title above steps
+
+---
+
+## Section 1: Personal Prediction
+**Anchor ID:** `#prediction`
+
+### 1.1 Hook & Personal Investment
+```html
+<section id="prediction" class="section">
+  <div class="container">
+    <div class="intro-card">
+      <h1>Let's start with you</h1>
+      <p class="intro-text">Before we look at any data, let's see how good your intuition is about social media and academics.</p>
+    </div>
+    
+    <!-- Step 1: Personal Usage -->
+    <div class="interaction-card">
+      <h3>About how many minutes do you spend on TikTok daily?</h3>
+      <div class="usage-slider-container">
+        <input type="range" id="personal-usage" min="0" max="300" value="60" class="usage-slider" />
+        <div class="slider-labels">
+          <span>0 min</span>
+          <span class="center-label">2.5 hrs</span>
+          <span>5 hrs</span>
+        </div>
+        <div class="usage-feedback">
+          <div class="usage-display">
+            <span class="time-large">1.0 hours</span>
+            <span class="usage-category">Light User</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+**Usage Categories:**
+- 0-30 min: "Light user" (--student-confident)
+- 30-90 min: "Moderate user" (--warning-amber)  
+- 90-180 min: "Heavy user" (--student-worried)
+- 180+ min: "Very heavy user" (--prediction-math)
+
+### 1.2 Population Prediction
+```html
+<div class="interaction-card">
+  <h3>Based on your usage, predict your own GPA range</h3>
+  <div class="gpa-predictor">
+    <input type="range" id="personal-gpa" min="2.0" max="4.0" step="0.1" class="gpa-slider" />
+    <div class="gpa-display">
+      <span class="gpa-number">3.2</span>
+      <span class="gpa-label">Above Average</span>
+    </div>
+  </div>
+  
+  <div class="transition-prompt">
+    <p>Now let's see what happens when we look at 1,000 students...</p>
+  </div>
+</div>
+
+<div class="interaction-card">
+  <h3>If we surveyed 1,000 college students, what relationship would we find?</h3>
+  <div class="relationship-predictor">
+    <div class="relationship-options">
+      <button class="relationship-btn" data-value="-1">
+        <div class="icon">📉</div>
+        <div class="label">More TikTok = Lower GPA</div>
+      </button>
+      <button class="relationship-btn" data-value="0">
+        <div class="icon">➖</div>
+        <div class="label">No relationship</div>
+      </button>
+      <button class="relationship-btn" data-value="1">
+        <div class="icon">📈</div>
+        <div class="label">More TikTok = Higher GPA</div>
+      </button>
+    </div>
+  </div>
+</div>
+```
+
+### 1.3 Confidence Assessment
+```html
+<div class="interaction-card">
+  <h3>How confident are you in your prediction?</h3>
+  <div class="confidence-slider-container">
+    <input type="range" id="confidence" min="0" max="100" value="50" class="confidence-slider" />
+    <div class="confidence-labels">
+      <span>Just guessing</span>
+      <span>Pretty sure</span>
+      <span>Very confident</span>
+    </div>
+    <div class="confidence-meter">
+      <div class="confidence-fill" style="width: 50%"></div>
+      <span class="confidence-percentage">50%</span>
+    </div>
+  </div>
+</div>
+```
+
+### 1.4 Prediction Summary
+```html
+<div class="prediction-summary-card">
+  <h3>Your Predictions</h3>
+  <div class="summary-grid">
+    <div class="summary-item">
+      <span class="label">Your TikTok Usage:</span>
+      <span class="value">90 minutes/day (Moderate User)</span>
+    </div>
+    <div class="summary-item">
+      <span class="label">Your GPA Prediction:</span>
+      <span class="value">3.2 (Above Average)</span>
+    </div>
+    <div class="summary-item">
+      <span class="label">Population Relationship:</span>
+      <span class="value">More TikTok = Lower GPA</span>
+    </div>
+    <div class="summary-item">
+      <span class="label">Confidence Level:</span>
+      <span class="value">75% - Pretty sure</span>
+    </div>
+  </div>
+  
+  <button class="continue-btn" onclick="scrollToSection('#discovery')">
+    Lock in predictions - Show me the data! 🔍
+  </button>
+</div>
+```
+
+---
+
+## Section 2: Data Discovery
+**Anchor ID:** `#discovery`
+
+### 2.1 Data Introduction
+```html
+<section id="discovery" class="section">
+  <div class="container">
+    <div class="discovery-intro">
+      <h1>Meet 10 students from our survey</h1>
+      <p>Each dot represents one real student. The bright blue dot is you based on your inputs.</p>
+    </div>
+    
+    <div class="chart-container">
+      <div class="chart-wrapper">
+        <!-- Chart implementation using Recharts -->
+        <div id="student-scatter-chart" class="scatter-chart"></div>
+        
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-dot user-dot"></div>
+            <span>You (90 min/day)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot student-dot"></div>
+            <span>Other students</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="initial-observation">
+        <h3>First look: What pattern do you notice?</h3>
+        <p>Take a moment to examine the dots. Hover over each student to learn their story.</p>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+### 2.2 Interactive Student Stories
+```html
+<div class="student-stories-section">
+  <h3>Get to know each student</h3>
+  <div class="students-grid">
+    <!-- Light Users -->
+    <div class="student-story-card" data-student="sarah">
+      <div class="student-header">
+        <div class="student-avatar">
+          <div class="usage-ring light"></div>
+          <img src="avatar-sarah.svg" alt="Sarah" />
+        </div>
+        <div class="student-stats">
+          <h4>Sarah, Junior</h4>
+          <div class="usage-stat">15 min/day</div>
+          <div class="gpa-stat">3.8 GPA</div>
+        </div>
+      </div>
+      
+      <div class="student-story">
+        <blockquote>"I only check TikTok between classes. I find it too distracting when I'm trying to study."</blockquote>
+        <div class="student-context">
+          <small>📚 Made Dean's List last semester</small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Heavy Users -->
+    <div class="student-story-card" data-student="marcus">
+      <div class="student-header">
+        <div class="student-avatar">
+          <div class="usage-ring heavy"></div>
+          <img src="avatar-marcus.svg" alt="Marcus" />
+        </div>
+        <div class="student-stats">
+          <h4>Marcus, Sophomore</h4>
+          <div class="usage-stat">4 hrs/day</div>
+          <div class="gpa-stat">2.4 GPA</div>
+        </div>
+      </div>
+      
+      <div class="student-story">
+        <blockquote>"I can't stop scrolling at night. I tell myself 'just one more video' but then it's 2 AM."</blockquote>
+        <div class="student-context">
+          <small>📉 Missed 3 assignments this semester</small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Additional students... -->
+  </div>
+</div>
+```
+
+### 2.3 Line Building Interface (Mobile-Friendly)
+```html
+<div class="line-builder-section">
+  <h3>Build your prediction line</h3>
+  <p>Instead of drawing, let's build a line by choosing two key points:</p>
+  
+  <div class="line-builder">
+    <div class="point-selector">
+      <h4>Light TikTok users (0-30 min/day)</h4>
+      <label>Typically have GPA around:</label>
+      <input type="range" id="light-user-gpa" min="2.0" max="4.0" step="0.1" value="3.5" />
+      <output class="gpa-output">3.5</output>
+    </div>
+    
+    <div class="connection-visual">
+      <div class="line-preview"></div>
+    </div>
+    
+    <div class="point-selector">
+      <h4>Heavy TikTok users (4+ hrs/day)</h4>
+      <label>Typically have GPA around:</label>
+      <input type="range" id="heavy-user-gpa" min="2.0" max="4.0" step="0.1" value="2.8" />
+      <output class="gpa-output">2.8</output>
+    </div>
+  </div>
+  
+  <button class="preview-line-btn">Preview My Prediction Line</button>
+  
+  <div class="line-preview-result" style="display: none;">
+    <div class="preview-chart"></div>
+    <div class="preview-feedback">
+      <h4>Your line says:</h4>
+      <p>Students lose about <strong>0.2 GPA points</strong> for each additional hour of daily TikTok use.</p>
+    </div>
+  </div>
+</div>
+```
+
+### 2.4 Validation Moment
+```html
+<div class="validation-moment">
+  <div class="celebration-icon">🎯</div>
+  <h3>You're thinking like a data scientist!</h3>
+  <p>You spotted the negative trend - that's exactly what the data shows.</p>
+  
+  <div class="insight-preview">
+    <small>Coming up: Let's test how well your line gives advice to real students...</small>
+  </div>
+  
+  <button class="continue-btn" onclick="scrollToSection('#scenarios')">
+    Test my advice system →
+  </button>
+</div>
+```
+
+---
+
+## Section 3: Advice Scenarios
+**Anchor ID:** `#scenarios`
+
+### 3.1 Scenario Introduction
+```html
+<section id="scenarios" class="section">
+  <div class="container">
+    <div class="scenario-intro">
+      <h1>Test your advice system</h1>
+      <p>You're a peer counselor. Students come to you worried about balancing TikTok and academics. How good is your prediction line at giving helpful advice?</p>
+    </div>
+  </div>
+</section>
+```
+
+### 3.2 Interactive Scenarios
+```html
+<div class="advice-simulator">
+  <!-- Scenario 1: High Usage Student -->
+  <div class="scenario-card">
+    <div class="student-question">
+      <img src="emma-avatar.svg" alt="Emma" class="student-avatar-small" />
+      <div class="speech-bubble">
+        <h4>Emma asks:</h4>
+        <p>"I spend 2 hours on TikTok daily. Should I be concerned about my grades?"</p>
+        <div class="student-context">
+          <small>Currently has 3.0 GPA, worried about med school applications</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="prediction-comparison">
+      <div class="prediction-card your-prediction">
+        <h4>Your Line Predicts:</h4>
+        <div class="prediction-result warning">
+          <span class="predicted-gpa">2.7 GPA</span>
+          <div class="advice-indicator">📉 Suggests: Cut back significantly</div>
+        </div>
+      </div>
+      
+      <div class="vs-indicator">vs</div>
+      
+      <div class="prediction-card math-prediction" style="opacity: 0.3;">
+        <h4>Math's Line Predicts:</h4>
+        <div class="prediction-result">
+          <span class="predicted-gpa">???</span>
+          <small>Coming up...</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="scenario-reflection">
+      <p><strong>Your advice would be:</strong> "Emma, your TikTok usage is probably hurting your grades. You should cut back to under an hour daily."</p>
+    </div>
+  </div>
+  
+  <!-- Scenario 2: Low Usage Student -->
+  <div class="scenario-card">
+    <div class="student-question">
+      <img src="jason-avatar.svg" alt="Jason" class="student-avatar-small" />
+      <div class="speech-bubble">
+        <h4>Jason asks:</h4>
+        <p>"I only use TikTok 20 minutes per day. Am I being too restrictive? Could I use it more without hurting my grades?"</p>
+        <div class="student-context">
+          <small>Currently has 3.6 GPA, feels like he's missing out socially</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="prediction-comparison">
+      <div class="prediction-card your-prediction">
+        <h4>Your Line Predicts:</h4>
+        <div class="prediction-result success">
+          <span class="predicted-gpa">3.7 GPA</span>
+          <div class="advice-indicator">✅ Suggests: You could use more</div>
+        </div>
+      </div>
+      
+      <div class="vs-indicator">vs</div>
+      
+      <div class="prediction-card math-prediction" style="opacity: 0.3;">
+        <h4>Math's Line Predicts:</h4>
+        <div class="prediction-result">
+          <span class="predicted-gpa">???</span>
+          <small>Coming up...</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="scenario-reflection">
+      <p><strong>Your advice would be:</strong> "Jason, you could probably increase to 45-60 minutes daily without much impact on your grades."</p>
+    </div>
+  </div>
+</div>
+```
+
+### 3.3 Accuracy Importance
+```html
+<div class="accuracy-explanation">
+  <h3>Why accuracy matters in advice-giving</h3>
+  <div class="impact-scenarios">
+    <div class="impact-card negative">
+      <h4>If your predictions are too pessimistic:</h4>
+      <ul>
+        <li>Students like Jason might unnecessarily restrict themselves</li>
+        <li>Could cause social isolation or excessive anxiety</li>
+        <li>Might make students dismiss all your advice as "too strict"</li>
+      </ul>
+    </div>
+    
+    <div class="impact-card positive">
+      <h4>If your predictions are too optimistic:</h4>
+      <ul>
+        <li>Students like Emma might not take necessary action</li>
+        <li>Could lead to continued academic decline</li>
+        <li>Might miss opportunities for early intervention</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="accuracy-insight">
+    <p><strong>The goal:</strong> Make predictions accurate enough to give helpful, balanced advice that students will actually follow.</p>
+  </div>
+</div>
+```
+
+### 3.4 Mathematical Approach Introduction
+```html
+<div class="math-introduction">
+  <h3>How does math find the most accurate line?</h3>
+  
+  <div class="distance-visualization">
+    <h4>Your line's "prediction errors"</h4>
+    <div class="error-chart">
+      <!-- Visual showing distances from each point to user's line -->
+    </div>
+    <p>Math measures how far off each prediction is, then finds the line that minimizes the total error.</p>
+  </div>
+  
+  <div class="optimization-concept">
+    <div class="concept-card">
+      <h4>The Mathematical Goal:</h4>
+      <p>Find the line that makes the smallest prediction errors across all students we've surveyed.</p>
+      <small>This gives us the best chance of making accurate predictions for NEW students asking for advice.</small>
+    </div>
+  </div>
+  
+  <button class="reveal-math-btn">
+    Show me the mathematical solution! 📊
+  </button>
+</div>
+```
+
+---
+
+## Section 4: Results & Comparison
+**Anchor ID:** `#results`
+
+### 4.1 Mathematical Reveal with Animation
+```html
+<section id="results" class="section">
+  <div class="container">
+    <div class="results-intro">
+      <h1>Your intuition vs Mathematical optimization</h1>
+    </div>
+    
+    <div class="comparison-chart-container">
+      <div class="chart-header">
+        <h3>The moment of truth</h3>
+        <p>Watch as the mathematical best-fit line reveals itself...</p>
+      </div>
+      
+      <div class="animated-chart">
+        <!-- Chart showing user line, then animated math line drawing in -->
+        <div id="final-comparison-chart"></div>
+        
+        <div class="chart-legend-final">
+          <div class="legend-item">
+            <div class="legend-line user-line"></div>
+            <span>👤 Your intuitive line</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-line math-line"></div>
+            <span>📊 Mathematical best-fit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+### 4.2 Comprehensive Results Analysis
+```html
+<div class="results-analysis">
+  <div class="insights-grid">
+    <!-- Celebration Card -->
+    <div class="insight-card celebration">
+      <div class="card-header">
+        <div class="icon">🎉</div>
+        <h4>Your Intuition Score</h4>
+      </div>
+      <div class="score-display">
+        <span class="score-number">87%</span>
+        <span class="score-label">Excellent intuition!</span>
+      </div>
+      <div class="score-details">
+        <p>✅ You captured the negative relationship perfectly</p>
+        <p>✅ Your slope was within 15% of the optimal</p>
+        <p>✅ You understood the real-world implications</p>
+      </div>
+    </div>
+    
+    <!-- Mathematical Improvements -->
+    <div class="insight-card learning">
+      <div class="card-header">
+        <div class="icon">🧮</div>
+        <h4>What Math Fine-Tuned</h4>
+      </div>
+      <div class="improvements">
+        <div class="improvement-item">
+          <span class="label">Slope adjustment:</span>
+          <span class="value">-12° steeper</span>
+        </div>
+        <div class="improvement-item">
+          <span class="label">Prediction accuracy:</span>
+          <span class="value">+23% improvement</span>
+        </div>
+        <div class="improvement-item">
+          <span class="label">Biggest improvement:</span>
+          <span class="value">Students using 1-3 hours daily</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Personal Position -->
+    <div class="insight-card personal">
+      <div class="card-header">
+        <div class="icon">📱</div>
+        <h4>Your Personal Position</h4>
+      </div>
+      <div class="personal-analysis">
+        <div class="usage-summary">
+          <p><strong>Your usage:</strong> 90 minutes/day (Moderate user)</p>
+        </div>
+        <div class="prediction-comparison">
+          <div class="prediction-item">
+            <span class="label">Your line predicted:</span>
+            <span class="value">3.1 GPA</span>
+          </div>
+          <div class="prediction-item">
+            <span class="label">Math's line predicts:</span>
+            <span class="value">3.2 GPA</span>
+          </div>
+        </div>
+        <div class="personal-insight">
+          <p>Both approaches suggest you're in a good balance zone. You could probably increase usage slightly without major academic impact.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### 4.3 Scenario Results Reveal
+```html
+<div class="scenario-results-reveal">
+  <h3>How would the mathematical line have advised your students?</h3>
+  
+  <!-- Emma Scenario Result -->
+  <div class="scenario-result-card">
+    <div class="student-reminder">
+      <img src="emma-avatar.svg" alt="Emma" />
+      <div class="question-recap">
+        <h4>Emma (2 hours/day TikTok)</h4>
+        <p>"Should I be concerned about my grades?"</p>
+      </div>
+    </div>
+    
+    <div class="advice-comparison">
+      <div class="advice-column your-advice">
+        <h5>Your Line's Advice:</h5>
+        <div class="advice-content warning">
+          <p>"Cut back significantly - you're probably hurting your grades."</p>
+          <small>Predicted GPA: 2.7 (concerning)</small>
+        </div>
+      </div>
+      
+      <div class="advice-column math-advice">
+        <h5>Math's Line Advice:</h5>
+        <div class="advice-content moderate">
+          <p>"Consider a moderate reduction - but you're not in crisis mode."</p>
+          <small>Predicted GPA: 3.0 (manageable)</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="advice-impact">
+      <p><strong>Impact:</strong> Your advice might have caused unnecessary panic. Math's approach would be more balanced.</p>
+    </div>
+  </div>
+  
+  <!-- Jason Scenario Result -->
+  <div class="scenario-result-card">
+    <div class="student-reminder">
+      <img src="jason-avatar.svg" alt="Jason" />
+      <div class="question-recap">
+        <h4>Jason (20 min/day TikTok)</h4>
+        <p>"Am I being too restrictive?"</p>
+      </div>
+    </div>
+    
+    <div class="advice-comparison">
+      <div class="advice-column your-advice">
+        <h5>Your Line's Advice:</h5>
+        <div class="advice-content success">
+          <p>"You could definitely use more - up to an hour daily."</p>
+          <small>Predicted GPA: 3.7 (excellent)</small>
+        </div>
+      </div>
+      
+      <div class="advice-column math-advice">
+        <h5>Math's Line Advice:</h5>
+        <div class="advice-content success">
+          <p>"You could increase to 45-60 minutes safely."</p>
+          <small>Predicted GPA: 3.6 (very good)</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="advice-impact">
+      <p><strong>Impact:</strong> Both approaches agree! You gave good advice here.</p>
+    </div>
+  </div>
+</div>
+```
+
+### 4.4 Learning Summary & Phase Transition
+```html
+<div class="learning-summary">
+  <h3>What you've learned</h3>
+  <div class="learning-points">
+    <div class="learning-point">
+      <div class="point-icon">🎯</div>
+      <div class="point-content">
+        <h4>Your intuition is powerful</h4>
+        <p>You correctly identified the relationship direction and approximate strength without any mathematical training.</p>
+      </div>
+    </div>
+    
+    <div class="learning-point">
+      <div class="point-icon">📐</div>
+      <div class="point-content">
+        <h4>Math refines intuition</h4>
+        <p>Mathematical optimization fine-tunes your instincts to make more accurate predictions for decision-making.</p>
+      </div>
+    </div>
+    
+    <div class="learning-point">
+      <div class="point-icon">🤝</div>
+      <div class="point-content">
+        <h4>Best results combine both</h4>
+        <p>Human insight identifies meaningful patterns; math quantifies them precisely for better real-world application.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="phase-completion">
+  <div class="achievement-badge">
+    <div class="badge-icon">🏆</div>
+    <h3>Phase 1 Complete!</h3>
+    <p>Pattern Detective Badge Earned</p>
+  </div>
+  
+  <div class="next-phase-preview">
+    <h4>Coming up in Phase 2:</h4>
+    <p>Learn how to spot when linear relationships DON'T fit the data, and discover more sophisticated pattern recognition techniques.</p>
+  </div>
+  
+  <button class="continue-to-phase-2">
+    Continue to Phase 2: Pattern Recognition Game 🎮
+  </button>
+</div>
+```
+
+---
+
+## Technical Implementation Specifications
+
+### React Component Architecture
+```
+App/
+├── Layout/
+│   ├── ProgressHeader.jsx
+│   └── SectionNavigation.jsx
+├── Section1_Prediction/
+│   ├── PersonalUsageSlider.jsx
+│   ├── RelationshipSelector.jsx
+│   ├── ConfidenceSlider.jsx
+│   └── PredictionSummary.jsx
+├── Section2_Discovery/
+│   ├── ScatterChart.jsx (using Recharts)
+│   ├── StudentStoryCard.jsx
+│   ├── LineBuilder.jsx
+│   └── ValidationMoment.jsx
+├── Section3_Scenarios/
+│   ├── AdviceSimulator.jsx
+│   ├── ScenarioCard.jsx
+│   └── AccuracyExplainer.jsx
+├── Section4_Results/
+│   ├── AnimatedComparison.jsx
+│   ├── InsightsGrid.jsx
+│   ├── ScenarioResults.jsx
+│   └── PhaseCompletion.jsx
+└── Shared/
+    ├── InteractionCard.jsx
+    ├── ContinueButton.jsx
+    └── ProgressTracker.jsx
+```
+
+### State Management
+```javascript
+// Global state using React Context + useReducer
+const AppState = {
+  // User inputs
+  personalUsage: null,        // 0-300 minutes
+  personalGPA: null,          // 2.0-4.0
+  relationshipDirection: null, // -1, 0, 1
+  confidence: null,           // 0-100
+  
+  // Line building
+  lightUserGPA: 3.5,         // User's prediction for light users
+  heavyUserGPA: 2.8,         // User's prediction for heavy users
+  
+  // Progress tracking
+  currentSection: 'prediction',
+  completedSections: [],
+  
+  // Chart data
+  studentData: [
+    { id: 1, name: "Sarah", tiktokMinutes: 15, gpa: 3.8, category: "light", story: "..." },
+    { id: 2, name: "Alex", tiktokMinutes: 45, gpa: 3.5, category: "moderate", story: "..." },
+    { id: 3, name: "Marcus", tiktokMinutes: 240, gpa: 2.4, category: "heavy", story: "..." },
+    // ... 7 more students
+  ],
+  
+  // Results
+  userLineSlope: null,
+  mathLineSlope: -0.004,      // Calculated slope
+  accuracyScore: null,        // 0-100
+  personalPredictionUser: null,
+  personalPredictionMath: null
+};
+
+// Action types for state updates
+const ActionTypes = {
+  SET_PERSONAL_USAGE: 'SET_PERSONAL_USAGE',
+  SET_RELATIONSHIP_DIRECTION: 'SET_RELATIONSHIP_DIRECTION',
+  SET_CONFIDENCE: 'SET_CONFIDENCE',
+  SET_LINE_POINTS: 'SET_LINE_POINTS',
+  COMPLETE_SECTION: 'COMPLETE_SECTION',
+  CALCULATE_RESULTS: 'CALCULATE_RESULTS'
+};
+```
+
+### Data Persistence Strategy
+```javascript
+// localStorage integration for cross-phase data
+const PersistenceManager = {
+  savePhase1Data() {
+    const dataToSave = {
+      phase: 1,
+      timestamp: Date.now(),
+      userInputs: {
+        personalUsage: appState.personalUsage,
+        relationshipDirection: appState.relationshipDirection,
+        confidence: appState.confidence,
+        lightUserGPA: appState.lightUserGPA,
+        heavyUserGPA: appState.heavyUserGPA
+      },
+      results: {
+        userLineSlope: appState.userLineSlope,
+        accuracyScore: appState.accuracyScore,
+        personalPredictionUser: appState.personalPredictionUser,
+        personalPredictionMath: appState.personalPredictionMath
+      }
+    };
+    
+    localStorage.setItem('linearRegressionJourney_phase1', JSON.stringify(dataToSave));
+  },
+  
+  loadPhase1Data() {
+    const saved = localStorage.getItem('linearRegressionJourney_phase1');
+    return saved ? JSON.parse(saved) : null;
+  }
+};
+```
+
+### Chart Implementation with Recharts
+```javascript
+// ScatterChart.jsx
+import { ScatterChart, Scatter, XAxis, YAxis, ResponsiveContainer, ReferenceLine } from 'recharts';
+
+const StudentScatterChart = ({ 
+  data, 
+  userPoint, 
+  userLine = null, 
+  mathLine = null, 
+  showUserLine = false, 
+  showMathLine = false 
+}) => {
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <ScatterChart margin={{ top: 20, right: 20, bottom: 60, left: 60 }}>
+        <XAxis 
+          type="number" 
+          dataKey="tiktokMinutes" 
+          domain={[0, 300]}
+          label={{ value: 'Daily TikTok Minutes', position: 'insideBottom', offset: -10 }}
+        />
+        <YAxis 
+          type="number" 
+          dataKey="gpa" 
+          domain={[2.0, 4.0]}
+          label={{ value: 'GPA', angle: -90, position: 'insideLeft' }}
+        />
+        
+        {/* Student data points */}
+        <Scatter 
+          data={data} 
+          fill="var(--neutral-gray)"
+          r={6}
+        />
+        
+        {/* User's point */}
+        <Scatter 
+          data={[userPoint]} 
+          fill="var(--prediction-user)"
+          r={10}
+        />
+        
+        {/* User's line */}
+        {showUserLine && userLine && (
+          <ReferenceLine 
+            segment={userLine.points}
+            stroke="var(--prediction-user)"
+            strokeWidth={3}
+            strokeDasharray="none"
+          />
+        )}
+        
+        {/* Mathematical line */}
+        {showMathLine && mathLine && (
+          <ReferenceLine 
+            segment={mathLine.points}
+            stroke="var(--prediction-math)"
+            strokeWidth={3}
+            strokeDasharray="none"
+          />
+        )}
+      </ScatterChart>
+    </ResponsiveContainer>
+  );
+};
+```
+
+### Animation Specifications
+```css
+/* Progress bar animation */
+.progress-fill {
+  transition: width 0.3s ease-out;
+  background: linear-gradient(90deg, var(--prediction-user), var(--prediction-math));
+  height: 4px;
+  border-radius: 2px;
+}
+
+/* Section transition animations */
+.section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mathematical line drawing animation */
+@keyframes drawLine {
+  0% {
+    stroke-dasharray: 0, 1000;
+  }
+  100% {
+    stroke-dasharray: 1000, 0;
+  }
+}
+
+.math-line-animated {
+  animation: drawLine 1.5s ease-out forwards;
+}
+
+/* Celebration animations */
+@keyframes celebrate {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.celebration-icon {
+  animation: celebrate 0.6s ease-out;
+  font-size: 3rem;
+}
+
+/* User point pulse animation */
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.user-point {
+  animation: pulse 2s infinite ease-in-out;
+}
+```
+
+### Responsive Layout Specifications
+```css
+/* Mobile First - Base styles */
+.container {
+  max-width: 100%;
+  padding: 1rem;
+  margin: 0 auto;
+}
+
+.interaction-card {
+  background: var(--card-background);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.insights-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Tablet - 768px and up */
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 2rem;
+  }
+  
+  .step-navigation {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .students-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .prediction-comparison {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+/* Desktop - 1024px and up */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+  
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .students-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .line-builder {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .point-selector {
+    flex: 1;
+  }
+  
+  .connection-visual {
+    flex: 0 0 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Large Desktop - 1440px and up */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1200px;
+  }
+  
+  .chart-container {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .chart-wrapper {
+    flex: 2;
+  }
+  
+  .initial-observation {
+    flex: 1;
+  }
+}
+```
+
+### Accessibility Specifications
+```css
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --prediction-user: #000080;
+    --prediction-math: #8B0000;
+    --success-green: #006400;
+    --warning-amber: #B8860B;
+    --text-primary: #000000;
+    --background: #FFFFFF;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .section {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Focus management */
+.interactive-element:focus {
+  outline: 2px solid var(--prediction-user);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Screen reader support */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+```
+
+### Performance Requirements
+```javascript
+// Lazy loading for chart libraries
+const LazyScatterChart = React.lazy(() => 
+  import('./components/ScatterChart').then(module => ({
+    default: module.StudentScatterChart
+  }))
+);
+
+// Image optimization
+const StudentAvatar = ({ name, ...props }) => (
+  <img 
+    src={`/avatars/${name.toLowerCase()}.svg`}
+    alt={`${name}'s avatar`}
+    loading="lazy"
+    width="60"
+    height="60"
+    {...props}
+  />
+);
+
+// Debounced slider updates
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  
+  return debouncedValue;
+};
+```
+
+### Bundle Optimization
+```javascript
+// webpack.config.js optimizations
+module.exports = {
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+        charts: {
+          test: /[\\/]node_modules[\\/](recharts|d3)[\\/]/,
+          name: 'charts',
+          chunks: 'all',
+        }
+      }
+    }
+  },
+  
+  // Image optimization
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              mozjpeg: { progressive: true, quality: 85 },
+              optipng: { enabled: true },
+              pngquant: { quality: [0.65, 0.90], speed: 4 },
+              gifsicle: { interlaced: false },
+              webp: { quality: 85 }
+            }
+          }
+        ]
+      }
+    ]
+  }
+};
+```
+
+---
+
+## Testing Specifications
+
+### User Testing Scenarios
+1. **Mobile User Journey** - Complete flow on 375px viewport
+2. **Accessibility Testing** - Screen reader navigation, keyboard-only usage
+3. **Performance Testing** - 3G network simulation, slow CPU simulation
+4. **Cross-browser Testing** - Chrome, Firefox, Safari, Edge
+5. **Learning Effectiveness** - A/B test different explanation approaches
+
+### Key Metrics to Track
+- **Engagement**: Time spent in each section, interaction completion rates
+- **Learning**: Pre/post comprehension quiz scores, retention after 1 week
+- **Usability**: Task completion rate, error recovery, satisfaction scores
+- **Performance**: Page load time, interaction response time, animation frame rate
+
+### Success Criteria
+- **Primary**: 85% of users complete all four sections
+- **Secondary**: 90% accuracy in post-assessment comprehension questions
+- **Performance**: < 3 seconds initial load, < 100ms interaction responses
+- **Accessibility**: WCAG 2.1 AA compliance, usable with screen readers
+
+---
+
+## Development Phases
+
+### Phase 1: Core Structure (Week 1)
+- Set up React project with routing and state management
+- Implement responsive layout and navigation
+- Create basic component structure
+- Add progress tracking system
+
+### Phase 2: Section Implementation (Week 2-3)
+- Build prediction input components with validation
+- Implement chart components with Recharts
+- Create student story cards and interactions
+- Add line builder interface
+
+### Phase 3: Advanced Features (Week 4)
+- Implement mathematical line calculation and animation
+- Build comparison and results sections
+- Add scenario simulation components
+- Integrate persistence system
+
+### Phase 4: Polish & Testing (Week 5)
+- Add animations and micro-interactions
+- Implement accessibility features
+- Performance optimization
+- User testing and iteration
+
+---
+
+This specification provides a comprehensive, implementation-ready design that balances educational effectiveness with technical feasibility for vibecode development.
