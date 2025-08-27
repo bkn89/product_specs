@@ -1,0 +1,539 @@
+# TikTok vs GPA Linear Regression - Technical Implementation Specification
+
+## Executive Summary
+
+This specification provides a complete technical architecture for implementing a single-page educational web application teaching linear regression through interactive TikTok usage vs GPA prediction. The approach prioritizes performance, mobile-first design, and educational effectiveness over visual complexity.
+
+## Critical Performance Requirements
+
+- **Initial Load**: < 2 seconds on 3G networks
+- **Bundle Size**: < 300KB compressed (excluding images)
+- **Interaction Response**: < 100ms for all user inputs
+- **Mobile Performance**: 60fps on iPhone SE and equivalent Android devices
+- **Accessibility**: WCAG 2.1 AA compliance
+
+## Technical Stack
+
+### Core Technologies
+- **React 18** with Concurrent Features
+- **Vite** for build tooling (faster development than webpack)
+- **Canvas API** for chart rendering (no external libraries)
+- **Tailwind CSS** for styling
+- **React Spring** for animations only where necessary
+
+### Explicitly Avoided Technologies
+- **Recharts/Chart.js** - Too heavy for interactive drawing (400KB+)
+- **D3.js** - Overkill for this use case
+- **React Context** - Unnecessary re-renders for this scope
+- **Redux/Zustand** - Over-engineering for single-page app
+
+## Architecture Overview
+
+```
+src/
+├── components/
+│   ├── charts/
+│   │   ├── CanvasScatterPlot.jsx     # Custom canvas-based chart
+│   │   ├── TouchLineDrawing.jsx      # Mobile-optimized line drawing
+│   │   └── AnimatedComparison.jsx    # Results visualization
+│   ├── inputs/
+│   │   ├── TouchSlider.jsx           # Large touch targets
+│   │   ├── ButtonSelector.jsx        # Relationship prediction
+│   │   └── ProgressHeader.jsx        # Fixed navigation
+│   └── sections/
+│       ├── Prediction.jsx            # Section 1: User predictions
+│       ├── Discovery.jsx             # Section 2: Data exploration
+│       ├── Setup.jsx                 # Section 3: Mathematical context
+│       └── Results.jsx               # Section 4: Comparison
+├── utils/
+│   ├── regression.js                 # Least squares implementation
+│   ├── persistence.js                # localStorage with error handling
+│   ├── canvas.js                     # Canvas drawing utilities
+│   └── validation.js                 # Input validation
+└── hooks/
+    ├── useCanvasDrawing.js           # Touch/mouse drawing logic
+    ├── useIntersectionObserver.js    # Section progress tracking
+    └── usePersistentState.js         # Auto-saving user inputs
+```
+
+## Core Component Specifications
+
+### 1. Canvas-Based Chart System
+
+```javascript
+// components/charts/CanvasScatterPlot.jsx
+import { useEffect, useRef, useCallback } from 'react';
+
+const CanvasScatterPlot = ({ 
+  data, 
+  userPoint, 
+  width = 600, 
+  height = 400,
+  onPointHover = null 
+}) => {
+  const canvasRef = useRef(null);
+  const [hoveredPoint, setHoveredPoint] = useState(null);
+
+  const drawChart = useCallback(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    
+    // High DPI support
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
+    
+    // Clear and draw axes, points, etc.
+    // Implementation optimized for 60fps
+  }, [data, userPoint, hoveredPoint]);
+
+  // Touch/mouse event handlers optimized for mobile
+  const handleInteraction = useCallback((e) => {
+    // Unified touch/mouse handling
+  }, [data]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={width}
+      height={height}
+      onMouseMove={handleInteraction}
+      onTouchStart={handleInteraction}
+      style={{ touchAction: 'none' }}
+      className="border border-gray-200 rounded-lg"
+    />
+  );
+};
+```
+
+### 2. Touch-Optimized Input Components
+
+```javascript
+// components/inputs/TouchSlider.jsx
+const TouchSlider = ({ 
+  value, 
+  onChange, 
+  min, 
+  max, 
+  step = 1,
+  label,
+  formatValue 
+}) => {
+  return (
+    <div className="space-y-4">
+      <label className="block text-lg font-medium">{label}</label>
+      
+      {/* Large touch target - minimum 44px height */}
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(parseInt(e.target.value))}
+        className="w-full h-12 bg-gray-200 rounded-lg appearance-none cursor-pointer
+                   slider-thumb:w-8 slider-thumb:h-8 slider-thumb:bg-blue-500 
+                   slider-thumb:rounded-full slider-thumb:border-none"
+      />
+      
+      <div className="flex justify-between text-sm text-gray-500">
+        <span>{formatValue(min)}</span>
+        <span className="font-bold text-lg text-gray-900">
+          {formatValue(value)}
+        </span>
+        <span>{formatValue(max)}</span>
+      </div>
+    </div>
+  );
+};
+```
+
+### 3. Mathematical Implementation
+
+```javascript
+// utils/regression.js
+export const calculateLinearRegression = (dataPoints) => {
+  if (dataPoints.length < 2) {
+    throw new Error('Need at least 2 data points');
+  }
+
+  const n = dataPoints.length;
+  const sumX = dataPoints.reduce((sum, p) => sum + p.x, 0);
+  const sumY = dataPoints.reduce((sum, p) => sum + p.y, 0);
+  const sumXY = dataPoints.reduce((sum, p) => sum + p.x * p.y, 0);
+  const sumXX = dataPoints.reduce((sum, p) => sum + p.x * p.x, 0);
+
+  const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+  
+  // Calculate R-squared for accuracy metrics
+  const yMean = sumY / n;
+  const ssRes = dataPoints.reduce((sum, p) => {
+    const predicted = slope * p.x + intercept;
+    return sum + Math.pow(p.y - predicted, 2);
+  }, 0);
+  
+  const ssTot = dataPoints.reduce((sum, p) => 
+    sum + Math.pow(p.y - yMean, 2), 0);
+  
+  const rSquared = 1 - (ssRes / ssTot);
+
+  return {
+    slope,
+    intercept,
+    rSquared,
+    // Helper function for predictions
+    predict: (x) => slope * x + intercept
+  };
+};
+
+export const calculateUserLineAccuracy = (userLine, mathematicalLine, testPoints) => {
+  const userErrors = testPoints.map(point => {
+    const userPrediction = userLine.predict(point.x);
+    return Math.abs(point.y - userPrediction);
+  });
+
+  const mathErrors = testPoints.map(point => {
+    const mathPrediction = mathematicalLine.predict(point.x);
+    return Math.abs(point.y - mathPrediction);
+  });
+
+  const userMAE = userErrors.reduce((sum, err) => sum + err, 0) / userErrors.length;
+  const mathMAE = mathErrors.reduce((sum, err) => sum + err, 0) / mathErrors.length;
+
+  // Return accuracy as percentage (higher is better)
+  const improvement = (userMAE - mathMAE) / userMAE;
+  const accuracyScore = Math.max(0, Math.min(100, (1 - userMAE / 2.0) * 100));
+
+  return {
+    accuracyScore: Math.round(accuracyScore),
+    improvement: Math.round(improvement * 100),
+    userMAE,
+    mathMAE
+  };
+};
+```
+
+## Data Structure
+
+### Student Dataset
+```javascript
+const STUDENT_DATA = [
+  {
+    id: 1,
+    name: "Sarah",
+    tiktokMinutes: 15,
+    gpa: 3.8,
+    category: "light",
+    story: "I only check TikTok between classes. I find it too distracting when studying.",
+    avatar: "sarah.svg",
+    context: "Made Dean's List last semester"
+  },
+  {
+    id: 2,
+    name: "Alex",
+    tiktokMinutes: 45,
+    gpa: 3.5,
+    category: "moderate", 
+    story: "TikTok is my reward after finishing assignments. Helps me unwind.",
+    avatar: "alex.svg",
+    context: "Engineering major, good time management"
+  },
+  // ... additional carefully selected data points
+  // Total: 8-10 students spanning usage spectrum
+];
+```
+
+### Application State
+```javascript
+// Single state object - no Context needed for this scope
+const initialState = {
+  // User inputs
+  personalUsage: 60,           // minutes/day
+  relationshipPrediction: 0,   // -1, 0, 1
+  confidenceLevel: 50,         // 0-100
+  personalGPA: 3.2,           // 2.0-4.0
+  
+  // User-drawn line (if implementing drawing feature)
+  userLine: null,             // { slope, intercept } or null
+  
+  // UI state
+  currentSection: 0,          // 0-3
+  completedSections: [],      // [0, 1, 2]
+  
+  // Results (calculated)
+  mathematicalLine: null,     // { slope, intercept, rSquared }
+  accuracyScore: null,        // 0-100
+  insights: null              // Generated feedback object
+};
+```
+
+## Mobile-First Responsive Design
+
+### Breakpoint Strategy
+```css
+/* Mobile First - Base styles (375px+) */
+.container {
+  max-width: 100%;
+  padding: 1rem;
+  margin: 0 auto;
+}
+
+.chart-container {
+  width: 100%;
+  height: 300px;
+  overflow-x: auto; /* Horizontal scroll if needed */
+}
+
+/* Tablet (768px+) */
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 2rem;
+  }
+  
+  .chart-container {
+    height: 400px;
+  }
+  
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+  
+  .comparison-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+```
+
+### Touch Target Specifications
+- **Minimum touch target**: 44px × 44px
+- **Slider handles**: 48px × 48px minimum
+- **Button spacing**: 8px minimum between interactive elements
+- **Text inputs**: 48px height minimum
+
+## Performance Optimizations
+
+### Code Splitting
+```javascript
+// App.jsx
+import { lazy, Suspense } from 'react';
+
+const PredictionSection = lazy(() => import('./sections/Prediction'));
+const DiscoverySection = lazy(() => import('./sections/Discovery'));
+const SetupSection = lazy(() => import('./sections/Setup'));
+const ResultsSection = lazy(() => import('./sections/Results'));
+
+// Preload next section based on current progress
+useEffect(() => {
+  if (currentSection === 0) {
+    import('./sections/Discovery');
+  } else if (currentSection === 1) {
+    import('./sections/Setup');
+  } else if (currentSection === 2) {
+    import('./sections/Results');
+  }
+}, [currentSection]);
+```
+
+### Canvas Optimization
+```javascript
+// utils/canvas.js
+export const optimizeCanvas = (canvas, context) => {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  
+  // Set actual size in memory
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  
+  // Scale context to match device pixel ratio
+  context.scale(dpr, dpr);
+  
+  // Set display size
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  
+  // Optimize for performance
+  context.imageSmoothingEnabled = false;
+};
+
+export const debounceRedraw = (callback, delay = 16) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback(...args), delay);
+  };
+};
+```
+
+## Data Persistence & Error Handling
+
+```javascript
+// utils/persistence.js
+class PersistenceManager {
+  constructor() {
+    this.version = '1.0';
+    this.key = 'tiktok_gpa_lr_phase1';
+  }
+
+  save(data) {
+    try {
+      const payload = {
+        version: this.version,
+        timestamp: Date.now(),
+        data: this.sanitizeData(data),
+        checksum: this.generateChecksum(data)
+      };
+      
+      localStorage.setItem(this.key, JSON.stringify(payload));
+      return true;
+    } catch (error) {
+      console.warn('Failed to save progress:', error);
+      return false;
+    }
+  }
+
+  load() {
+    try {
+      const saved = localStorage.getItem(this.key);
+      if (!saved) return null;
+
+      const payload = JSON.parse(saved);
+      
+      // Version compatibility check
+      if (payload.version !== this.version) {
+        return this.migrate(payload);
+      }
+
+      // Integrity check
+      if (!this.verifyChecksum(payload.data, payload.checksum)) {
+        console.warn('Data integrity check failed');
+        return null;
+      }
+
+      return payload.data;
+    } catch (error) {
+      console.warn('Failed to load saved progress:', error);
+      return null;
+    }
+  }
+
+  sanitizeData(data) {
+    // Remove any potentially sensitive or invalid data
+    return {
+      personalUsage: Math.max(0, Math.min(300, data.personalUsage || 60)),
+      relationshipPrediction: [-1, 0, 1].includes(data.relationshipPrediction) ? data.relationshipPrediction : 0,
+      confidenceLevel: Math.max(0, Math.min(100, data.confidenceLevel || 50)),
+      currentSection: Math.max(0, Math.min(3, data.currentSection || 0))
+    };
+  }
+
+  generateChecksum(data) {
+    // Simple checksum for data integrity
+    return btoa(JSON.stringify(data)).length.toString(16);
+  }
+
+  verifyChecksum(data, checksum) {
+    return this.generateChecksum(data) === checksum;
+  }
+
+  migrate(oldPayload) {
+    // Handle version migrations if needed
+    console.log('Migrating data from version', oldPayload.version);
+    return oldPayload.data;
+  }
+}
+
+export const persistence = new PersistenceManager();
+```
+
+## Testing Strategy
+
+### Performance Testing
+```javascript
+// utils/performance.js
+export const measurePerformance = (name, fn) => {
+  const start = performance.now();
+  const result = fn();
+  const end = performance.now();
+  
+  console.log(`${name} took ${end - start} milliseconds`);
+  
+  // Log to analytics if needed
+  if (end - start > 100) {
+    console.warn(`Slow operation detected: ${name}`);
+  }
+  
+  return result;
+};
+
+// Usage in components
+const handleSliderChange = useCallback((value) => {
+  measurePerformance('Slider Update', () => {
+    updateInput('personalUsage', value);
+    recalculateUserPosition();
+  });
+}, []);
+```
+
+### Accessibility Testing Checklist
+- [ ] Keyboard navigation works for all interactions
+- [ ] Screen reader announces state changes
+- [ ] Color contrast ratios meet WCAG AA standards
+- [ ] Focus indicators are clearly visible
+- [ ] Touch targets meet minimum size requirements
+- [ ] Content scales properly to 200% zoom
+- [ ] No content depends solely on color
+
+## Development Phases
+
+### Phase 1: Foundation (Days 1-2)
+- Set up Vite project with React 18
+- Implement basic routing and state management
+- Create responsive layout structure
+- Build core input components with proper touch targets
+
+### Phase 2: Chart System (Days 3-4)
+- Implement Canvas-based scatter plot
+- Add touch/mouse interaction handling
+- Create data visualization utilities
+- Test performance on mobile devices
+
+### Phase 3: User Flow (Days 5-6)
+- Build all four main sections
+- Implement section navigation
+- Add progress tracking
+- Integrate mathematical calculations
+
+### Phase 4: Polish & Performance (Days 7-8)
+- Performance optimization and testing
+- Accessibility improvements
+- Cross-browser compatibility
+- User testing and iteration
+
+## Success Metrics
+
+### Technical Metrics
+- **Lighthouse Score**: 90+ on mobile
+- **Bundle Size**: < 300KB compressed
+- **Time to Interactive**: < 3 seconds
+- **Canvas Frame Rate**: 60fps sustained
+
+### Educational Metrics  
+- **Completion Rate**: > 85% reach final section
+- **Engagement Time**: 8-12 minutes average
+- **Comprehension**: Post-assessment accuracy > 80%
+- **Mobile Usage**: > 60% of users on mobile devices
+
+This specification provides a complete technical roadmap optimized for rapid prototyping while maintaining production-quality standards for performance and accessibility.
